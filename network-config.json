@@ -1,0 +1,21 @@
+{
+  "blockchainSpecs": [
+    {
+      "genesis": "${HOME}/.metalgo/configs/vms/btcvm_genesis.json",
+      "vm_name": "btcvm",
+      "chainConfig": "${HOME}/.metalgo/configs/chains/btcvm/config.json"
+    }
+  ],
+  "execPath": "${PWD}/../metalgo/build/metalgo",
+  "globalNodeConfig": "{\"chain-config-dir\": \"${HOME}/.metalgo/configs/chains\", \"log-level\":\"INFO\",\"throttler-inbound-validator-alloc-size\":\"107374182\",\"throttler-inbound-node-max-processing-msgs\":\"100000\",\"throttler-inbound-bandwidth-refill-rate\":\"1073741824\",\"throttler-inbound-bandwidth-max-burst-size\":\"1073741824\",\"throttler-inbound-cpu-validator-alloc\":\"100000\",\"throttler-inbound-disk-validator-alloc\":\"10737418240000\",\"throttler-outbound-validator-alloc-size\":\"107374182\",\"vm-aliases-file\":\"${HOME}/.metalgo/configs/vms/aliases.json\"}",
+  "logLevel": "INFO",
+  "numNodes": 5,
+  "pluginDir": "${PWD}/../metalgo/build/plugins",
+  "customNodeConfigs": {
+    "node1": "{\"log-level\":\"info\"}",
+    "node2": "{\"log-level\":\"info\"}",
+    "node3": "{\"log-level\":\"info\"}",
+    "node4": "{\"log-level\":\"info\"}",
+    "node5": "{\"log-level\":\"info\"}"
+  }
+}

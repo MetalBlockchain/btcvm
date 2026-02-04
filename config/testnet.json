@@ -1,0 +1,40 @@
+{
+  "networkId": 1337,
+  "chainParams": "regtest",
+
+  "blockMaxWeight": 4000000,
+  "blockMinWeight": 0,
+  "targetBlockTime": 10,
+
+  "maxMempoolSize": 300000000,
+  "mempoolExpiry": 3600,
+  "minRelayTxFee": 1000,
+  "maxOrphanTxs": 100,
+
+  "cacheSize": 100,
+  "pruneAfterHeight": 0,
+
+  "txIndexEnabled": true,
+  "addrIndexEnabled": false,
+
+  "maxPeers": 50,
+  "connectionTimeout": 30,
+  "pushGossipFrequency": 1,
+  "pullGossipFrequency": 2,
+  "pushGossipPercentStake": 0.9,
+  "pushGossipNumValidators": 10,
+  "pushGossipNumPeers": 0,
+
+  "rpcHost": "0.0.0.0",
+  "rpcPort": "8332",
+  "rpcUser": "bitcoin",
+  "rpcPass": "password",
+  "rpcLimitUser": "",
+  "rpcLimitPass": "",
+  "rpcWhitelist": ["127.0.0.1", "::1"],
+
+  "stateSyncEnabled": false,
+  "stateSyncMinBlocks": 300000,
+  "stateSyncRequestSize": 1024,
+  "stateSyncServerTrieCache": 64
+}
