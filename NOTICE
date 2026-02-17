@@ -1,0 +1,40 @@
+btcvm - Bitcoin VM for Metal
+
+Copyright (c) 2024-2026, Metallicus, Inc.
+
+This product includes software developed by other parties. The following
+acknowledgments and licenses apply to code incorporated in this repository:
+
+-----------------------------------------------------------------------------
+btcd (directory btcd/ and subdirectories, excluding vendored data)
+-----------------------------------------------------------------------------
+  Copyright (c) 2013-2025 The btcsuite developers
+  Copyright (c) 2015-2019 The Decred developers
+
+  Licensed under the ISC License. See btcd/LICENSE.
+
+-----------------------------------------------------------------------------
+btcd/btcutil
+-----------------------------------------------------------------------------
+  Copyright (c) 2013-2017 The btcsuite developers
+  Copyright (c) 2016-2017 The Lightning Network Developers
+
+  Licensed under the ISC License. See btcd/btcutil/LICENSE.
+
+-----------------------------------------------------------------------------
+btcd/txscript/data (JSON test data)
+-----------------------------------------------------------------------------
+  Copyright (c) 2012-2014 The Bitcoin Core developers
+
+  Distributed under the MIT License. See btcd/txscript/data/LICENSE.
+
+-----------------------------------------------------------------------------
+btcd/upnp.go (UPnP code from Taipei Torrent)
+-----------------------------------------------------------------------------
+  Copyright (c) 2010 Jack Palevich. All rights reserved.
+
+  Redistribution and use in source and binary forms, with or without
+  modification, are permitted under the BSD 3-Clause License (terms
+  reproduced in the source file).
+
+-----------------------------------------------------------------------------
