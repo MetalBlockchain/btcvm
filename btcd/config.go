@@ -598,7 +598,7 @@ func LoadConfig(nodeId string, overrideCfg *Config) (*Config, []string, error) {
 	// while we're at it
 	if cfg.TestNet {
 		numNets++
-		activeNetParams = &btcVMTestNetParms
+		activeNetParams = &btcVMLocalNetParms
 		cfg.ChainParams = activeNetParams.Params
 	}
 

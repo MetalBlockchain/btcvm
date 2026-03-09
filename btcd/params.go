@@ -13,7 +13,7 @@ import (
 
 // activeNetParams is a pointer to the parameters specific to the
 // currently active bitcoin network.
-var activeNetParams = &btcVMTestNetParms
+var activeNetParams = &btcVMLocalNetParms
 
 // params is used to group parameters for various networks such as the main
 // network and test networks.
@@ -36,16 +36,16 @@ var mainNetParams = params{
 // genesisMerkleRoot is the hash of the first transaction in the genesis block
 var (
 	bigOne               = big.NewInt(1)
-	btcVMTestNetPowLimit = new(big.Int).Sub(new(big.Int).Lsh(bigOne, 255), bigOne)
+	btcVMLocalNetPowLimit = new(big.Int).Sub(new(big.Int).Lsh(bigOne, 255), bigOne)
 
-	btcVMTestNetGenesisMerkleRoot = chainhash.Hash([chainhash.HashSize]byte{
+	btcVMLocalNetGenesisMerkleRoot = chainhash.Hash([chainhash.HashSize]byte{
 		0x43, 0x6a, 0xde, 0xcf, 0xe4, 0xd9, 0x31, 0x22, /* |Cj....1"| */
 		0x0b, 0xd4, 0xdd, 0x44, 0xce, 0x55, 0x44, 0xba, /* |...D.UD.| */
 		0xa7, 0x69, 0x8c, 0xaf, 0xe0, 0x08, 0xdc, 0xef, /* |.i......| */
 		0x4b, 0x23, 0xd1, 0x7b, 0x75, 0x83, 0xac, 0x5d, /* |K#.{u..]| */
 	})
 
-	btcVMTestNetGenesisHash = chainhash.Hash([chainhash.HashSize]byte{
+	btcVMLocalNetGenesisHash = chainhash.Hash([chainhash.HashSize]byte{
 		0xe4, 0x3b, 0x3b, 0x00, 0xc5, 0xf7, 0x44, 0x44, /* |.;;...DD| */
 		0xd6, 0x86, 0xf7, 0x7b, 0xf9, 0x31, 0xe3, 0x3f, /* |...{.1.?| */
 		0xc7, 0x98, 0x31, 0xcb, 0x7b, 0xa9, 0x68, 0x91, /* |..1.{.h.| */
@@ -86,13 +86,13 @@ var (
 		LockTime: 0,
 	}
 
-	// btcVMTestNetGenesisBlock defines the genesis block of the block chain which
+	// btcVMLocalNetGenesisBlock defines the genesis block of the block chain which
 	// serves as the public transaction ledger for the test network (version 3).
-	btcVMTestNetGenesisBlock = wire.MsgBlock{
+	btcVMLocalNetGenesisBlock = wire.MsgBlock{
 		Header: wire.BlockHeader{
 			Version:    1,
 			PrevBlock:  chainhash.Hash{},              // 0000000000000000000000000000000000000000000000000000000000000000
-			MerkleRoot: btcVMTestNetGenesisMerkleRoot, // 5dac83757bd1234befdc08e0af8c69a7ba4455ce44ddd40b2231d9e4cfde6a43
+			MerkleRoot: btcVMLocalNetGenesisMerkleRoot, // 5dac83757bd1234befdc08e0af8c69a7ba4455ce44ddd40b2231d9e4cfde6a43
 			Timestamp:  time.Unix(1766342623, 0),      // 2025-12-21T12:43:43-06:00
 			Bits:       0x1d00ffff,                    // 486604799
 			Nonce:      0x13DC5589,                    // 333206921
@@ -101,19 +101,19 @@ var (
 	}
 )
 
-// BtcVMTestNetParams defines the network parameters for the test Bitcoin network
+// BtcVMLocalNetParams defines the network parameters for the local Bitcoin network
 // (version 3).  Not to be confused with the regression test network, this
 // network is sometimes simply called "testnet".
-var BtcvmTestNetParms = chaincfg.Params{
-	Name:        "btcvmtestnet",
+var BtcvmLocalNetParms = chaincfg.Params{
+	Name:        "btcvmlocalnet",
 	Net:         wire.SimNet,
 	DefaultPort: "18555",
 	DNSSeeds:    []chaincfg.DNSSeed{}, // NOTE: There must NOT be any seeds.
 
 	// Chain parameters
-	GenesisBlock:             &btcVMTestNetGenesisBlock,
-	GenesisHash:              &btcVMTestNetGenesisHash,
-	PowLimit:                 btcVMTestNetPowLimit,
+	GenesisBlock:             &btcVMLocalNetGenesisBlock,
+	GenesisHash:              &btcVMLocalNetGenesisHash,
+	PowLimit:                 btcVMLocalNetPowLimit,
 	PowLimitBits:             0x1d00ffff,
 	BIP0034Height:            0, // Always active on simnet
 	BIP0065Height:            0, // Always active on simnet
@@ -220,11 +220,11 @@ var BtcvmTestNetParms = chaincfg.Params{
 	HDCoinType: 115, // ASCII for s
 }
 
-// btcvmTestNetParms contains parameters specific to the test network (version 3)
+// btcvmLocalNetParms contains parameters specific to the local network (version 3)
 // (wire.TestNet).  NOTE: The RPC port is intentionally different than the
 // reference implementation - see the mainNetParams comment for details.
-var btcVMTestNetParms = params{
-	Params:  &BtcvmTestNetParms,
+var btcVMLocalNetParms = params{
+	Params:  &BtcvmLocalNetParms,
 	rpcPort: "18334",
 }
 

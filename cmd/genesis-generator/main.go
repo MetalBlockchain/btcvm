@@ -138,13 +138,13 @@ Genesis Block (hex):
 		genesisBlock.Header.Timestamp.Unix(),
 		genesisHex,
 	)
-	printHashAsGoStruct(genesisBlock.Header.MerkleRoot, "btcVMTestNetGenesisMerkleRoot")
+	printHashAsGoStruct(genesisBlock.Header.MerkleRoot, "btcVMLocalNetGenesisMerkleRoot")
 	fmt.Println()
-	printHashAsGoStruct(blockHash, "btcVMTestNetGenesisHash")
+	printHashAsGoStruct(blockHash, "btcVMLocalNetGenesisHash")
 	fmt.Println()
 	printTxAsGoStruct(genesisBlock.Transactions[0], "genesisCoinbaseTx")
 	fmt.Println()
-	printBlockAsGoStruct(genesisBlock, "btcVMTestNetGenesisBlock")
+	printBlockAsGoStruct(genesisBlock, "btcVMLocalNetGenesisBlock")
 	fmt.Println()
 }
 
@@ -217,7 +217,7 @@ func printBlockAsGoStruct(block *wire.MsgBlock, varName string) {
 	Header: wire.BlockHeader{
 		Version:    %d,
 		PrevBlock:  chainhash.Hash{}, // %s
-		MerkleRoot: btcVMTestNetGenesisMerkleRoot, // %s
+		MerkleRoot: btcVMLocalNetGenesisMerkleRoot, // %s
 		Timestamp:  time.Unix(%d, 0), // %s
 		Bits:       0x%x, // %d
 		Nonce:      0x%X, // %d
