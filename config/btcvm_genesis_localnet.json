@@ -1,0 +1,10 @@
+{
+  "config": {
+    "chainId": "btcvm-local",
+    "rpcUser": "test",
+    "rpcPass": "test",
+    "testNet": false,
+    "txindex": true,
+    "miningAddrs": ["SVpD5a8XcTK3N24aHMrsBR9XbbdMeBnZKW"]
+  }
+}

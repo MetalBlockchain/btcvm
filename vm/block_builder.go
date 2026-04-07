@@ -107,63 +107,7 @@ func (b *blockBuilder) signalCanBuild() {
 
 	b.pendingSignal.Broadcast()
 	b.vm.ctx.Log.Info("signalCanBuild broadcasted to condition variable")
-
-	// Start a goroutine to handle the delay and notify the engine
-	go b.scheduleBlockBuild()
-}
-
-// scheduleBlockBuild waits for the appropriate delay and then notifies the engine to build a block
-func (b *blockBuilder) scheduleBlockBuild() {
-	b.vm.ctx.Log.Info("scheduleBlockBuild started")
-
-	// Get current block to calculate delay
-	currentBlock, err := b.vm.getCurrentBlock()
-	if err != nil {
-		b.vm.ctx.Log.Error("scheduleBlockBuild failed to get current block", zap.Error(err))
-		b.lock.Lock()
-		b.hasPendingTxs = false
-		b.lock.Unlock()
-		return
-	}
-
-	// Calculate delay based on last build time
-	delay := b.calculateBuildingDelay(*currentBlock.Hash())
-	b.vm.ctx.Log.Info("scheduleBlockBuild calculated delay", zap.Duration("delay", delay))
-
-	// If delay is needed, wait for it
-	if delay > 0 {
-		b.vm.ctx.Log.Info("scheduleBlockBuild waiting for delay", zap.Duration("delay", delay))
-		timer := time.NewTimer(delay)
-		defer timer.Stop()
-
-		select {
-		case <-timer.C:
-			b.vm.ctx.Log.Info("scheduleBlockBuild delay elapsed")
-		case <-b.shutdownChan:
-			b.vm.ctx.Log.Info("scheduleBlockBuild cancelled due to shutdown")
-			return
-		}
-	} else {
-		b.vm.ctx.Log.Info("scheduleBlockBuild no delay needed")
-	}
-
-	// Check if we still need to build (transactions might have been included in another block)
-	if !b.needToBuild() {
-		b.vm.ctx.Log.Info("scheduleBlockBuild no transactions to build")
-		b.lock.Lock()
-		b.hasPendingTxs = false
-		b.lock.Unlock()
-		return
-	}
-
-	// Notify the engine to build a block
-	b.vm.ctx.Log.Info("scheduleBlockBuild notifying engine")
-	select {
-	case b.vm.toEngine <- common.PendingTxs:
-		b.vm.ctx.Log.Info("scheduleBlockBuild successfully notified engine")
-	default:
-		b.vm.ctx.Log.Warn("scheduleBlockBuild failed to notify engine (channel full)")
-	}
+	// Block build is driven by snowman via VM.WaitForEvent (NotificationForwarder).
 }
 
 // needToBuild returns true if there are pending transactions

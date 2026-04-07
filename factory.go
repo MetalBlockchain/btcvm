@@ -4,7 +4,7 @@
 package btcvm
 
 import (
-	"github.com/MetalBlockchain/metalgo/snow"
+	"github.com/MetalBlockchain/metalgo/utils/logging"
 	"github.com/MetalBlockchain/metalgo/vms"
 
 	"github.com/MetalBlockchain/btcvm/vm"
@@ -16,6 +16,6 @@ var _ vms.Factory = &Factory{}
 type Factory struct{}
 
 // New returns a new Bitcoin VM instance
-func (f *Factory) New(*snow.Context) (interface{}, error) {
+func (f *Factory) New(_ logging.Logger) (interface{}, error) {
 	return &vm.VM{}, nil
 }

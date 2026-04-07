@@ -1,7 +1,7 @@
 {
   "blockchainSpecs": [
     {
-      "genesis": "${HOME}/.metalgo/configs/vms/btcvm_genesis.json",
+      "genesis": "${HOME}/.metalgo/configs/vms/btcvm_genesis_localnet.json",
       "vm_name": "btcvm",
       "chainConfig": "${HOME}/.metalgo/configs/chains/btcvm/config.json"
     }

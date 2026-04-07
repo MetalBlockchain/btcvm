@@ -4699,7 +4699,14 @@ func (s *rpcServer) Start() (http.Handler, http.Handler) {
 
 	// Websocket endpoint.
 	wsHandler := http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		authenticated, isAdmin, err := s.checkAuth(r, false)
+		// When RPC credentials are configured, require HTTP Basic on the upgrade
+		// request (same as POST /rpc). Otherwise websocket clients start
+		// unauthenticated and must issue an `authenticate` RPC first — but
+		// github.com/btcsuite/btcd/rpcclient only sends Basic on the handshake,
+		// so a missing header would leave every RPC as "unauthenticated" and
+		// the first non-authenticate command closes the connection (1006).
+		requireAuth := cfg != nil && (cfg.RPCUser != "" || cfg.RPCLimitUser != "")
+		authenticated, isAdmin, err := s.checkAuth(r, requireAuth)
 		if err != nil {
 			jsonAuthFail(w)
 			return

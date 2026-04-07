@@ -594,13 +594,16 @@ func LoadConfig(nodeId string, overrideCfg *Config) (*Config, []string, error) {
 
 	// Multiple networks can't be selected simultaneously.
 	numNets := 0
-	// Count number of network flags passed; assign active network params
-	// while we're at it
+	// Select Metal btcvm network: testnet (wire.TestNet3) vs default localnet
+	// (wire.SimNet / BtcvmLocalNetParms). Always set cfg.ChainParams — it was
+	// previously only set when testNet was true, leaving nil and panicking VM init.
 	if cfg.TestNet {
 		numNets++
+		activeNetParams = &btcVMTestNetParms
+	} else {
 		activeNetParams = &btcVMLocalNetParms
-		cfg.ChainParams = activeNetParams.Params
 	}
+	cfg.ChainParams = activeNetParams.Params
 
 	if numNets > 1 {
 		str := "%s: The testnet, regtest, segnet, signet and simnet " +
