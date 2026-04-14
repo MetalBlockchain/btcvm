@@ -10,7 +10,7 @@
     "disableListen": true,
     "disableStallHandler": true,
     "maxPeers": 0,
-    "miningAddrs": ["SiPGXy2yA6ZZ47jpgKMZntvFDZ6xJv6ZgG"],
+    "miningAddrs": ["SWjrW7PFQUQy4sc5Xj67iivrBSqYcMZkrK"],
     "relayNonStd": true,
     "blockMaxWeight": 4000000,
     "blockMaxSize": 1000000

@@ -12,6 +12,10 @@ set -o pipefail
 # to pass this flag to all child processes spawned by the shell.
 export CGO_CFLAGS="-O -D__BLST_PORTABLE__"
 
+if [[ "$(uname -s)" == "Linux" ]]; then
+    export CGO_ENABLED=1
+fi
+
 # Load the constants
 # Set the PATHS
 GOPATH="$(go env GOPATH)"

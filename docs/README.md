@@ -47,3 +47,6 @@ Use `make <target>` to run the commands above.
 - Core methods include Initialize, Shutdown, SetState, LastAccepted, and block parsing/verification routines.
 - This allows for a self-contained environment where Bitcoin transactions and blocks are synchronized using Metal’s consensus and network layers.
 - It is configured to mint a block every 5 seconds by triggering it with a timer
+
+# Notes
+- If building on Linux use `export CGO_ENABLED=1`
