@@ -309,7 +309,7 @@ var BtcvmTestNetParms = chaincfg.Params{
 	BIP0034Height:            0,
 	BIP0065Height:            0,
 	BIP0066Height:            0,
-	CoinbaseMaturity:         100,
+	CoinbaseMaturity:         0,
 	SubsidyReductionInterval: 210000,
 	TargetTimespan:           time.Hour * 24 * 14, // 14 days
 	TargetTimePerBlock:       time.Minute * 10,    // 10 minutes
