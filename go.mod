@@ -16,7 +16,7 @@ require (
 	github.com/MetalBlockchain/btcvm/btcd/btcutil v0.0.0-00010101000000-000000000000
 	github.com/MetalBlockchain/btcvm/btcd/chaincfg/chainhash v1.1.0
 	github.com/MetalBlockchain/btcvm/btcd/v2transport v0.0.0-00010101000000-000000000000
-	github.com/MetalBlockchain/metalgo v1.13.5-rc.12
+	github.com/MetalBlockchain/metalgo v1.13.5
 	github.com/btcsuite/btcd v0.25.0
 	github.com/btcsuite/btcd/btcec/v2 v2.3.6
 	github.com/btcsuite/btcd/btcutil v1.1.6
