@@ -146,7 +146,22 @@ func (vm *VM) Initialize(
 		return fmt.Errorf("failed to parse config: %w", err)
 	}
 
-	// Disable legacy networking
+	// Layer the per-node chain config (configBytes, sourced by avalanchego from
+	// {chain-config-dir}/<chainID>/config.json) over the genesis-derived config.
+	// Genesis is hashed into the chain ID and so cannot carry per-node tunables;
+	// configBytes lets each node override settings such as rpcMaxClients,
+	// rpcMaxConcurrentReqs, and rpcMaxWebsockets with only a restart. Non-zero
+	// fields in the override win; unset fields keep their genesis/default value.
+	if len(configBytes) > 0 {
+		var nodeOverride btcd.Config
+		if err := json.Unmarshal(configBytes, &nodeOverride); err != nil {
+			return fmt.Errorf("failed to parse per-node config bytes: %w", err)
+		}
+		btcd.MergeConfig(config, &nodeOverride)
+	}
+
+	// Disable legacy networking. These are forced after the per-node merge so
+	// configBytes can never re-enable listening, DNS seeding, or peering.
 	config.DisableListen = true
 	config.DisableDNSSeed = true
 	config.MaxPeers = 0
