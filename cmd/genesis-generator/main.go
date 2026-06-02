@@ -25,6 +25,7 @@ func main() {
 	reward := flag.Int64("reward", 5000000000, "Coinbase reward in satoshis (default: 50 BTC)")
 	timestamp := flag.Int64("timestamp", 0, "Block timestamp (unix seconds, default: now)")
 	network := flag.String("net", "mainnet", "Network to use (mainnet, testnet, regtest, simnet, signet)")
+	varPrefix := flag.String("varprefix", "btcVMLocalNet", "Variable name prefix for generated Go code (e.g. btcVMLocalNet, btcVMTestNet)")
 
 	flag.Parse()
 
@@ -138,13 +139,13 @@ Genesis Block (hex):
 		genesisBlock.Header.Timestamp.Unix(),
 		genesisHex,
 	)
-	printHashAsGoStruct(genesisBlock.Header.MerkleRoot, "btcVMTestNetGenesisMerkleRoot")
+	printHashAsGoStruct(genesisBlock.Header.MerkleRoot, *varPrefix+"GenesisMerkleRoot")
 	fmt.Println()
-	printHashAsGoStruct(blockHash, "btcVMTestNetGenesisHash")
+	printHashAsGoStruct(blockHash, *varPrefix+"GenesisHash")
 	fmt.Println()
 	printTxAsGoStruct(genesisBlock.Transactions[0], "genesisCoinbaseTx")
 	fmt.Println()
-	printBlockAsGoStruct(genesisBlock, "btcVMTestNetGenesisBlock")
+	printBlockAsGoStruct(genesisBlock, *varPrefix+"GenesisBlock", *varPrefix)
 	fmt.Println()
 }
 
@@ -210,14 +211,14 @@ func printTxAsGoStruct(tx *wire.MsgTx, varName string) {
 `, tx.LockTime)
 }
 
-func printBlockAsGoStruct(block *wire.MsgBlock, varName string) {
+func printBlockAsGoStruct(block *wire.MsgBlock, varName string, varPrefix string) {
 	fmt.Printf(`// %s defines the genesis block of the block chain which
-// serves as the public transaction ledger for the test network (version 3).
+// serves as the public transaction ledger.
 %s = wire.MsgBlock{
 	Header: wire.BlockHeader{
 		Version:    %d,
 		PrevBlock:  chainhash.Hash{}, // %s
-		MerkleRoot: btcVMTestNetGenesisMerkleRoot, // %s
+		MerkleRoot: %sGenesisMerkleRoot, // %s
 		Timestamp:  time.Unix(%d, 0), // %s
 		Bits:       0x%x, // %d
 		Nonce:      0x%X, // %d
@@ -228,6 +229,7 @@ func printBlockAsGoStruct(block *wire.MsgBlock, varName string) {
 		varName,
 		block.Header.Version,
 		block.Header.PrevBlock.String(),
+		varPrefix,
 		block.Header.MerkleRoot.String(),
 		block.Header.Timestamp.Unix(),
 		block.Header.Timestamp.Format(time.RFC3339),

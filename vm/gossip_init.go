@@ -57,17 +57,8 @@ func (vm *VM) initializeGossip() error {
 	)
 	vm.ctx.Log.Debug("Created gossip handler")
 
-	// Initialize validators for stake-weighted gossip
-	if vm.p2pValidators == nil {
-		vm.p2pValidators, err = vm.InitializeValidators()
-		if err != nil {
-			return fmt.Errorf("failed to initialize validators: %w", err)
-		}
-		vm.ctx.Log.Info("Initialized validator set for gossip")
-	}
-
-	// Create p2p client for gossip
-	client := vm.p2pNetwork.NewClient(BTCGossipHandlerID)
+	// Create p2p client for gossip (validators implement NodeSampler for the client)
+	client := vm.p2pNetwork.NewClient(BTCGossipHandlerID, vm.p2pValidators)
 	vm.ctx.Log.Debug("Created p2p client", zap.Uint64("handlerID", BTCGossipHandlerID))
 
 	// Configure gossip parameters

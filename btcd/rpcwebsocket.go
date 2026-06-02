@@ -1405,8 +1405,9 @@ out:
 					c.addr)
 				break out
 			case !c.authenticated && !ok:
-				rpcsLog.Warnf("Unauthenticated websocket message " +
-					"received")
+				rpcsLog.Infof("Closing websocket %s: unauthenticated client "+
+					"sent %q before `authenticate` (send HTTP Basic on upgrade or "+
+					"authenticate first); see rpc TLS/auth settings", c.addr, cmd.method)
 				break out
 			case !c.authenticated:
 				// Check credentials.
@@ -1642,8 +1643,8 @@ out:
 								c.addr)
 							break out
 						case !c.authenticated && !ok:
-							rpcsLog.Warnf("Unauthenticated websocket message " +
-								"received")
+							rpcsLog.Infof("Closing websocket %s: unauthenticated "+
+								"client sent %q before `authenticate`", c.addr, cmd.method)
 							break out
 						case !c.authenticated:
 							// Check credentials.

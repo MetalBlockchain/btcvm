@@ -1,0 +1,18 @@
+{
+  "config": {
+    "testNet": true,
+    "txIndex": true,
+    "addrIndex": true,
+    "rpcUser": "bitcoin",
+    "rpcPass": "password",
+    "disableTLS": true,
+    "disableDNSSeed": true,
+    "disableListen": true,
+    "disableStallHandler": true,
+    "maxPeers": 0,
+    "miningAddrs": ["SWjrW7PFQUQy4sc5Xj67iivrBSqYcMZkrK"],
+    "relayNonStd": true,
+    "blockMaxWeight": 4000000,
+    "blockMaxSize": 1000000
+  }
+}

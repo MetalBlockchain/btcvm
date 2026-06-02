@@ -36,6 +36,8 @@ var (
 
 const (
 	Name = "btcvm"
+
+	validatorSetStaleness = 5 * time.Minute
 )
 
 var Version = &version.Semantic{
@@ -47,9 +49,8 @@ var Version = &version.Semantic{
 // VM implements the Metal ChainVM interface for Bitcoin
 type VM struct {
 	// Metal context
-	ctx      *snow.Context
-	db       database.Database
-	toEngine chan<- common.Message
+	ctx *snow.Context
+	db  database.Database
 
 	config *btcd.Config
 
@@ -117,7 +118,6 @@ func (vm *VM) Initialize(
 	genesisBytes []byte,
 	upgradeBytes []byte,
 	configBytes []byte,
-	toEngine chan<- common.Message,
 	_ []*common.Fx,
 	appSender common.AppSender,
 ) error {
@@ -132,7 +132,6 @@ func (vm *VM) Initialize(
 	}
 
 	vm.db = db
-	vm.toEngine = toEngine
 	vm.appSender = appSender
 	vm.shutdownChan = make(chan struct{})
 
@@ -147,7 +146,22 @@ func (vm *VM) Initialize(
 		return fmt.Errorf("failed to parse config: %w", err)
 	}
 
-	// Disable legacy networking
+	// Layer the per-node chain config (configBytes, sourced by avalanchego from
+	// {chain-config-dir}/<chainID>/config.json) over the genesis-derived config.
+	// Genesis is hashed into the chain ID and so cannot carry per-node tunables;
+	// configBytes lets each node override settings such as rpcMaxClients,
+	// rpcMaxConcurrentReqs, and rpcMaxWebsockets with only a restart. Non-zero
+	// fields in the override win; unset fields keep their genesis/default value.
+	if len(configBytes) > 0 {
+		var nodeOverride btcd.Config
+		if err := json.Unmarshal(configBytes, &nodeOverride); err != nil {
+			return fmt.Errorf("failed to parse per-node config bytes: %w", err)
+		}
+		btcd.MergeConfig(config, &nodeOverride)
+	}
+
+	// Disable legacy networking. These are forced after the per-node merge so
+	// configBytes can never re-enable listening, DNS seeding, or peering.
 	config.DisableListen = true
 	config.DisableDNSSeed = true
 	config.MaxPeers = 0
@@ -182,10 +196,19 @@ func (vm *VM) Initialize(
 	vm.btcdAdapter.SetOnTxAccepted(vm.blockBuilder.onTxAccepted)
 	vm.btcdAdapter.Start()
 
-	// Initialize p2p network
+	// Initialize p2p network (validators track connections for gossip peer sampling)
 	vm.ctx.Log.Info("Initializing p2p network")
+	if vm.ctx.ValidatorState == nil {
+		return fmt.Errorf("validator state not initialized")
+	}
+	vm.p2pValidators = p2p.NewValidators(
+		vm.ctx.Log,
+		vm.ctx.SubnetID,
+		vm.ctx.ValidatorState,
+		validatorSetStaleness,
+	)
 	reg := prometheus.NewRegistry()
-	p2pNet, err := p2p.NewNetwork(vm.ctx.Log, appSender, reg, "p2p")
+	p2pNet, err := p2p.NewNetwork(vm.ctx.Log, appSender, reg, "p2p", vm.p2pValidators)
 	if err != nil {
 		return fmt.Errorf("failed to create p2p network: %w", err)
 	}
@@ -706,4 +729,9 @@ func (vm *VM) CreateHandlers(context.Context) (map[string]http.Handler, error) {
 		"/rpc": rpcHandler,
 		"/ws":  wsHandler,
 	}, nil
+}
+
+// NewHTTPHandler implements common.VM for routing on the node HTTP server when requested via chain header.
+func (*VM) NewHTTPHandler(context.Context) (http.Handler, error) {
+	return http.NewServeMux(), nil
 }

@@ -46,9 +46,9 @@ const (
 	defaultBanDuration           = time.Hour * 24
 	defaultBanThreshold          = 100
 	defaultConnectTimeout        = time.Second * 30
-	defaultMaxRPCClients         = 10
-	defaultMaxRPCWebsockets      = 25
-	defaultMaxRPCConcurrentReqs  = 20
+	defaultMaxRPCClients         = 100
+	defaultMaxRPCWebsockets      = 100
+	defaultMaxRPCConcurrentReqs  = 100
 	defaultDbType                = "ffldb"
 	defaultFreeTxRelayLimit      = 15.0
 	defaultTrickleInterval       = peer.DefaultTrickleInterval
@@ -402,6 +402,14 @@ func newConfigParser(cfg *Config, so *serviceOptions, options flags.Options) *fl
 	return parser
 }
 
+// MergeConfig merges non-zero values from override into base config. It is the
+// exported entry point used to layer a per-node config (e.g. avalanchego's
+// chain config bytes) on top of an already-loaded config without disturbing any
+// field the override leaves unset.
+func MergeConfig(base *Config, override *Config) {
+	mergeConfigs(base, override)
+}
+
 // mergeConfigs merges non-zero values from override into base config using reflection
 func mergeConfigs(base *Config, override *Config) {
 	if override == nil {
@@ -594,13 +602,16 @@ func LoadConfig(nodeId string, overrideCfg *Config) (*Config, []string, error) {
 
 	// Multiple networks can't be selected simultaneously.
 	numNets := 0
-	// Count number of network flags passed; assign active network params
-	// while we're at it
+	// Select Metal btcvm network: testnet (wire.TestNet3) vs default localnet
+	// (wire.SimNet / BtcvmLocalNetParms). Always set cfg.ChainParams — it was
+	// previously only set when testNet was true, leaving nil and panicking VM init.
 	if cfg.TestNet {
 		numNets++
 		activeNetParams = &btcVMTestNetParms
-		cfg.ChainParams = activeNetParams.Params
+	} else {
+		activeNetParams = &btcVMLocalNetParms
 	}
+	cfg.ChainParams = activeNetParams.Params
 
 	if numNets > 1 {
 		str := "%s: The testnet, regtest, segnet, signet and simnet " +

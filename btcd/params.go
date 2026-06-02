@@ -13,7 +13,7 @@ import (
 
 // activeNetParams is a pointer to the parameters specific to the
 // currently active bitcoin network.
-var activeNetParams = &btcVMTestNetParms
+var activeNetParams = &btcVMLocalNetParms
 
 // params is used to group parameters for various networks such as the main
 // network and test networks.
@@ -36,16 +36,16 @@ var mainNetParams = params{
 // genesisMerkleRoot is the hash of the first transaction in the genesis block
 var (
 	bigOne               = big.NewInt(1)
-	btcVMTestNetPowLimit = new(big.Int).Sub(new(big.Int).Lsh(bigOne, 255), bigOne)
+	btcVMLocalNetPowLimit = new(big.Int).Sub(new(big.Int).Lsh(bigOne, 255), bigOne)
 
-	btcVMTestNetGenesisMerkleRoot = chainhash.Hash([chainhash.HashSize]byte{
+	btcVMLocalNetGenesisMerkleRoot = chainhash.Hash([chainhash.HashSize]byte{
 		0x43, 0x6a, 0xde, 0xcf, 0xe4, 0xd9, 0x31, 0x22, /* |Cj....1"| */
 		0x0b, 0xd4, 0xdd, 0x44, 0xce, 0x55, 0x44, 0xba, /* |...D.UD.| */
 		0xa7, 0x69, 0x8c, 0xaf, 0xe0, 0x08, 0xdc, 0xef, /* |.i......| */
 		0x4b, 0x23, 0xd1, 0x7b, 0x75, 0x83, 0xac, 0x5d, /* |K#.{u..]| */
 	})
 
-	btcVMTestNetGenesisHash = chainhash.Hash([chainhash.HashSize]byte{
+	btcVMLocalNetGenesisHash = chainhash.Hash([chainhash.HashSize]byte{
 		0xe4, 0x3b, 0x3b, 0x00, 0xc5, 0xf7, 0x44, 0x44, /* |.;;...DD| */
 		0xd6, 0x86, 0xf7, 0x7b, 0xf9, 0x31, 0xe3, 0x3f, /* |...{.1.?| */
 		0xc7, 0x98, 0x31, 0xcb, 0x7b, 0xa9, 0x68, 0x91, /* |..1.{.h.| */
@@ -86,13 +86,13 @@ var (
 		LockTime: 0,
 	}
 
-	// btcVMTestNetGenesisBlock defines the genesis block of the block chain which
+	// btcVMLocalNetGenesisBlock defines the genesis block of the block chain which
 	// serves as the public transaction ledger for the test network (version 3).
-	btcVMTestNetGenesisBlock = wire.MsgBlock{
+	btcVMLocalNetGenesisBlock = wire.MsgBlock{
 		Header: wire.BlockHeader{
 			Version:    1,
 			PrevBlock:  chainhash.Hash{},              // 0000000000000000000000000000000000000000000000000000000000000000
-			MerkleRoot: btcVMTestNetGenesisMerkleRoot, // 5dac83757bd1234befdc08e0af8c69a7ba4455ce44ddd40b2231d9e4cfde6a43
+			MerkleRoot: btcVMLocalNetGenesisMerkleRoot, // 5dac83757bd1234befdc08e0af8c69a7ba4455ce44ddd40b2231d9e4cfde6a43
 			Timestamp:  time.Unix(1766342623, 0),      // 2025-12-21T12:43:43-06:00
 			Bits:       0x1d00ffff,                    // 486604799
 			Nonce:      0x13DC5589,                    // 333206921
@@ -101,19 +101,19 @@ var (
 	}
 )
 
-// BtcVMTestNetParams defines the network parameters for the test Bitcoin network
+// BtcVMLocalNetParams defines the network parameters for the local Bitcoin network
 // (version 3).  Not to be confused with the regression test network, this
 // network is sometimes simply called "testnet".
-var BtcvmTestNetParms = chaincfg.Params{
-	Name:        "btcvmtestnet",
+var BtcvmLocalNetParms = chaincfg.Params{
+	Name:        "btcvmlocalnet",
 	Net:         wire.SimNet,
 	DefaultPort: "18555",
 	DNSSeeds:    []chaincfg.DNSSeed{}, // NOTE: There must NOT be any seeds.
 
 	// Chain parameters
-	GenesisBlock:             &btcVMTestNetGenesisBlock,
-	GenesisHash:              &btcVMTestNetGenesisHash,
-	PowLimit:                 btcVMTestNetPowLimit,
+	GenesisBlock:             &btcVMLocalNetGenesisBlock,
+	GenesisHash:              &btcVMLocalNetGenesisHash,
+	PowLimit:                 btcVMLocalNetPowLimit,
 	PowLimitBits:             0x1d00ffff,
 	BIP0034Height:            0, // Always active on simnet
 	BIP0065Height:            0, // Always active on simnet
@@ -220,12 +220,198 @@ var BtcvmTestNetParms = chaincfg.Params{
 	HDCoinType: 115, // ASCII for s
 }
 
-// btcvmTestNetParms contains parameters specific to the test network (version 3)
+// btcvmLocalNetParms contains parameters specific to the local network (version 3)
 // (wire.TestNet).  NOTE: The RPC port is intentionally different than the
 // reference implementation - see the mainNetParams comment for details.
+var btcVMLocalNetParms = params{
+	Params:  &BtcvmLocalNetParms,
+	rpcPort: "18334",
+}
+
+// btcVMTestNet genesis variables.
+// Generated with: go run ./cmd/genesis-generator -address SWjrW7PFQUQy4sc5Xj67iivrBSqYcMZkrK -net simnet -reward 2100000000000000
+var (
+	btcVMTestNetPowLimit = new(big.Int).Sub(new(big.Int).Lsh(bigOne, 255), bigOne)
+
+	btcVMTestNetGenesisMerkleRoot = chainhash.Hash([chainhash.HashSize]byte{
+		0xfa, 0xcc, 0x0a, 0x40, 0x19, 0x7a, 0xe7, 0x88, /* |...@.z..| */
+		0x05, 0xfb, 0xec, 0xe7, 0x6e, 0x14, 0x76, 0x14, /* |....n.v.| */
+		0xb7, 0x00, 0x8d, 0x2e, 0x99, 0xc7, 0x9f, 0xbd, /* |........| */
+		0x7d, 0xfb, 0x1a, 0x47, 0x2b, 0x8f, 0x26, 0x2a, /* |}..G+.&*| */
+	})
+
+	btcVMTestNetGenesisHash = chainhash.Hash([chainhash.HashSize]byte{
+		0x4b, 0x21, 0x1e, 0xb5, 0x6f, 0x94, 0xb1, 0xc2, /* |K!..o...| */
+		0x80, 0x1f, 0xcd, 0x77, 0xd8, 0x8a, 0x64, 0x63, /* |...w..dc| */
+		0x70, 0x08, 0x7e, 0xe4, 0x3c, 0xf0, 0x18, 0x4e, /* |p.~.<..N| */
+		0x43, 0x4b, 0xc7, 0xc0, 0x00, 0x00, 0x00, 0x00, /* |CK......| */
+	})
+
+	testnetGenesisCoinbaseTx = wire.MsgTx{
+		Version: 1,
+		TxIn: []*wire.TxIn{
+			{
+				PreviousOutPoint: wire.OutPoint{
+					Hash:  chainhash.Hash{},
+					Index: 0xffffffff,
+				},
+				SignatureScript: []byte{
+					0x42, 0x54, 0x43, 0x56, 0x4d, 0x20, 0x47, 0x65, /* |BTCVM Ge| */
+					0x6e, 0x65, 0x73, 0x69, 0x73, 0x20, 0x42, 0x6c, /* |nesis Bl| */
+					0x6f, 0x63, 0x6b, 0x20, 0x2d, 0x20, 0x50, 0x6f, /* |ock - Po| */
+					0x77, 0x65, 0x72, 0x65, 0x64, 0x20, 0x62, 0x79, /* |wered by| */
+					0x20, 0x4d, 0x65, 0x74, 0x61, 0x6c, 0x20, 0x42, /* | Metal B| */
+					0x6c, 0x6f, 0x63, 0x6b, 0x63, 0x68, 0x61, 0x69, /* |lockchai| */
+					0x6e,                                             /* |n.......| */
+				},
+				Sequence: 0xffffffff,
+			},
+		},
+		TxOut: []*wire.TxOut{
+			{
+				Value: 0x775f05a074000,
+				PkScript: []byte{
+					0x76, 0xa9, 0x14, 0x67, 0x9c, 0xd3, 0xa2, 0xf7, /* |v..g....| */
+					0x4c, 0xc7, 0x41, 0x17, 0x3c, 0x54, 0x22, 0xb4, /* |L.A.<T".| */
+					0x91, 0xf2, 0xfd, 0x81, 0x5b, 0x7f, 0x91, 0x88, /* |....[...| */
+					0xac,                                             /* |........| */
+				},
+			},
+		},
+		LockTime: 0,
+	}
+
+	btcVMTestNetGenesisBlock = wire.MsgBlock{
+		Header: wire.BlockHeader{
+			Version:    1,
+			PrevBlock:  chainhash.Hash{},
+			MerkleRoot: btcVMTestNetGenesisMerkleRoot, // 2a268f2b471afb7dbd9fc7992e8d00b71476146ee7ecfb0588e77a19400accfa
+			Timestamp:  time.Unix(1776188539, 0),      // 2026-04-14T12:42:19-05:00
+			Bits:       0x1d00ffff,                    // 486604799
+			Nonce:      0x343E9FD9,                    // 876519385
+		},
+		Transactions: []*wire.MsgTx{&testnetGenesisCoinbaseTx},
+	}
+)
+
+// BtcvmTestNetParms defines the network parameters for the BTCVM test network.
+var BtcvmTestNetParms = chaincfg.Params{
+	Name:        "btcvmtestnet",
+	Net:         wire.TestNet3,
+	DefaultPort: "18333",
+	DNSSeeds:    []chaincfg.DNSSeed{},
+
+	// Chain parameters
+	GenesisBlock:             &btcVMTestNetGenesisBlock,
+	GenesisHash:              &btcVMTestNetGenesisHash,
+	PowLimit:                 btcVMTestNetPowLimit,
+	PowLimitBits:             0x1d00ffff,
+	BIP0034Height:            0,
+	BIP0065Height:            0,
+	BIP0066Height:            0,
+	CoinbaseMaturity:         0,
+	SubsidyReductionInterval: 210000,
+	TargetTimespan:           time.Hour * 24 * 14, // 14 days
+	TargetTimePerBlock:       time.Minute * 10,    // 10 minutes
+	RetargetAdjustmentFactor: 4,                   // 25% less, 400% more
+	ReduceMinDifficulty:      true,
+	MinDiffReductionTime:     time.Minute * 20, // TargetTimePerBlock * 2
+	GenerateSupported:        true,
+
+	// Checkpoints ordered from oldest to newest.
+	Checkpoints: nil,
+
+	// Consensus rule change deployments.
+	RuleChangeActivationThreshold: 75, // 75% of MinerConfirmationWindow
+	MinerConfirmationWindow:       100,
+	Deployments: [chaincfg.DefinedDeployments]chaincfg.ConsensusDeployment{
+		chaincfg.DeploymentTestDummy: {
+			BitNumber: 28,
+			DeploymentStarter: chaincfg.NewMedianTimeDeploymentStarter(
+				time.Time{},
+			),
+			DeploymentEnder: chaincfg.NewMedianTimeDeploymentEnder(
+				time.Time{},
+			),
+		},
+		chaincfg.DeploymentTestDummyMinActivation: {
+			BitNumber:                 22,
+			CustomActivationThreshold: 50,
+			MinActivationHeight:       600,
+			DeploymentStarter: chaincfg.NewMedianTimeDeploymentStarter(
+				time.Time{},
+			),
+			DeploymentEnder: chaincfg.NewMedianTimeDeploymentEnder(
+				time.Time{},
+			),
+		},
+		chaincfg.DeploymentCSV: {
+			BitNumber: 0,
+			DeploymentStarter: chaincfg.NewMedianTimeDeploymentStarter(
+				time.Time{},
+			),
+			DeploymentEnder: chaincfg.NewMedianTimeDeploymentEnder(
+				time.Time{},
+			),
+		},
+		chaincfg.DeploymentSegwit: {
+			BitNumber: 1,
+			DeploymentStarter: chaincfg.NewMedianTimeDeploymentStarter(
+				time.Time{},
+			),
+			DeploymentEnder: chaincfg.NewMedianTimeDeploymentEnder(
+				time.Time{},
+			),
+		},
+		chaincfg.DeploymentTaproot: {
+			BitNumber: 2,
+			DeploymentStarter: chaincfg.NewMedianTimeDeploymentStarter(
+				time.Time{},
+			),
+			DeploymentEnder: chaincfg.NewMedianTimeDeploymentEnder(
+				time.Time{},
+			),
+			CustomActivationThreshold: 75,
+		},
+		chaincfg.DeploymentTestDummyAlwaysActive: {
+			BitNumber: 29,
+			DeploymentStarter: chaincfg.NewMedianTimeDeploymentStarter(
+				time.Time{},
+			),
+			DeploymentEnder: chaincfg.NewMedianTimeDeploymentEnder(
+				time.Time{},
+			),
+			AlwaysActiveHeight: 1,
+		},
+	},
+
+	// Mempool parameters
+	RelayNonStdTxs: true,
+
+	// Human-readable part for Bech32 encoded segwit addresses, as defined in
+	// BIP 173.
+	Bech32HRPSegwit: "sb", // same as local net for consistent BTCVM addressing
+
+	// Address encoding magics (same as local net for consistent BTCVM addressing)
+	PubKeyHashAddrID:        0x3f, // starts with S
+	ScriptHashAddrID:        0x7b, // starts with s
+	PrivateKeyID:            0x64, // starts with 4 (uncompressed) or F (compressed)
+	WitnessPubKeyHashAddrID: 0x19, // starts with Gg
+	WitnessScriptHashAddrID: 0x28, // starts with ?
+
+	// BIP32 hierarchical deterministic extended key magics
+	HDPrivateKeyID: [4]byte{0x04, 0x20, 0xb9, 0x00}, // starts with sprv
+	HDPublicKeyID:  [4]byte{0x04, 0x20, 0xbd, 0x3a}, // starts with spub
+
+	// BIP44 coin type used in the hierarchical deterministic path for
+	// address generation.
+	HDCoinType: 115, // ASCII for s
+}
+
+// btcVMTestNetParms wraps BtcvmTestNetParms with an RPC port.
 var btcVMTestNetParms = params{
 	Params:  &BtcvmTestNetParms,
-	rpcPort: "18334",
+	rpcPort: "18332",
 }
 
 // netName returns the name used when referring to a bitcoin network.  At the
